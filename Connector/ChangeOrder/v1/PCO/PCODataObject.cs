@@ -140,7 +140,7 @@ public class PCODataObject
 
     [JsonPropertyName("referenceFields")]
     [Description("Dynamic reference fields")]
-    public JsonDocument? ReferenceFields { get; init; }
+    public Dictionary<string, ReferenceField>? ReferenceFields { get; init; }
 }
 
 public record IndexedValue
@@ -152,4 +152,13 @@ public record IndexedValue
     [JsonPropertyName("value")]
     [Description("Value amount")]
     public decimal? Value { get; init; }
+}
+
+public class ReferenceField
+{
+    [JsonPropertyName("value")]
+    public object? Value { get; init; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; init; }
 }
