@@ -1,1 +1,1 @@
-## Accubid Connector for Appp Xchange
+Accubid Connector for App Xchange
