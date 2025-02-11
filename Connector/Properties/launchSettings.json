@@ -1,0 +1,55 @@
+{
+  "profiles": {
+    "Connector": {
+      "commandName": "Project"
+    },
+    "Database Cache Writer": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --moduleId database-1 --serviceType CacheWriter",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    },
+    "Project Cache Writer": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --moduleId project-1 --serviceType CacheWriter",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    },
+    "Estimate Cache Writer": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --moduleId estimate-1 --serviceType CacheWriter",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    },
+    "Closeout Cache Writer": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --moduleId closeout-1 --serviceType CacheWriter",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    },
+    "ChangeOrder Cache Writer": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --moduleId changeorder-1 --serviceType CacheWriter",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    },
+    "Test Connection Local Development": {
+      "commandName": "Project",
+      "commandLineArgs": "--isLocal true --testingConnection true --connection-file test-connection.json",
+      "environmentVariables": {
+        "DIFFYCACHE_DBLOCATION": "./databases",
+        "ESR__QueueName": "localrun"
+      }
+    }
+  }
+}

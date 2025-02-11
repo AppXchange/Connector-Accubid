@@ -1,0 +1,48 @@
+{
+  "name": "Accubid-Charley",
+  "urlPart": "accubid-charley",
+  "key": "accubid-charley",
+  "description": "",
+  "modules": [
+    {
+      "id": "database-1",
+      "name": "Database",
+      "urlPart": "database",
+      "key": "database",
+      "description": "",
+      "version": 1
+    },
+    {
+      "id": "estimate-1",
+      "name": "Estimate",
+      "urlPart": "estimate",
+      "key": "estimate",
+      "description": "",
+      "version": 1
+    },
+    {
+      "id": "project-1",
+      "name": "Project",
+      "urlPart": "project",
+      "key": "project",
+      "description": "",
+      "version": 1
+    },
+    {
+      "id": "closeout-1",
+      "name": "Closeout",
+      "urlPart": "closeout",
+      "key": "closeout",
+      "description": "",
+      "version": 1
+    },
+    {
+      "id": "changeorder-1",
+      "name": "Change Order",
+      "urlPart": "changeorder",
+      "key": "changeorder",
+      "description": "",
+      "version": 1
+    }
+  ]
+}
