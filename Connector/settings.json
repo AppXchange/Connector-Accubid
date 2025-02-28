@@ -1,8 +1,8 @@
 {
-  "name": "Accubid-Charley",
-  "urlPart": "accubid-charley",
-  "key": "accubid-charley",
-  "description": "",
+  "name": "Accubid Anywhere Testing",
+  "urlPart": "trimble-sales-accubid",
+  "key": "trimble-sales-accubid",
+  "description": "Accubid is a comprehensive estimating and project management software designed for electrical contractors. It helps streamline the bidding, project tracking, and cost management processes, improving accuracy and efficiency in construction projects.",
   "modules": [
     {
       "id": "database-1",

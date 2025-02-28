@@ -1,43 +1,40 @@
-﻿using Connector.Client;
+using Connector.Client;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xchange.Connector.SDK.Client.Testing;
+using Xchange.Connector.SDK.Client.ConnectionDefinitions;
+using Xchange.Connector.SDK.Client.ConnectivityApi.Models;
 
 namespace Connector.Connections
 {
     public class ConnectionTestHandler : IConnectionTestHandler
     {
-        private readonly ApiClient _apiClient;
         private readonly ILogger<ConnectionTestHandler> _logger;
+        private readonly ApiClient _apiClient;
 
         public ConnectionTestHandler(
-            ApiClient apiClient,
-            ILogger<ConnectionTestHandler> logger)
+            ILogger<ConnectionTestHandler> logger,
+            ApiClient apiClient)
         {
-            _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger;
+            _apiClient = apiClient;
         }
 
-        public Task<TestConnectionResult> TestConnection()
-        {
-            return TestConnection(CancellationToken.None);
-        }
-
-        public async Task<TestConnectionResult> TestConnection(CancellationToken cancellationToken)
+        public async Task<TestConnectionResult> TestConnection()
         {
             try
             {
-                // Test connection by calling the database endpoint since it's required for all operations
-                var response = await _apiClient.GetDatabases<object>(cancellationToken);
+                // Make a test API call to verify credentials
+                var response = await _apiClient.TestConnection();
 
                 if (response.IsSuccessful)
                 {
                     return new TestConnectionResult
                     {
                         Success = true,
-                        Message = "Successfully connected to Accubid API",
+                        Message = "Successfully connected to API",
                         StatusCode = response.StatusCode
                     };
                 }
@@ -45,17 +42,17 @@ namespace Connector.Connections
                 return new TestConnectionResult
                 {
                     Success = false,
-                    Message = $"Failed to connect to Accubid API. Status code: {response.StatusCode}",
+                    Message = $"Failed to connect: {response.ErrorDetails?.Message ?? "Unknown error"}",
                     StatusCode = response.StatusCode
                 };
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error testing connection to Accubid API");
+                _logger.LogError(ex, "Error testing connection");
                 return new TestConnectionResult
                 {
                     Success = false,
-                    Message = $"Error connecting to Accubid API: {ex.Message}",
+                    Message = $"Error testing connection: {ex.Message}",
                     StatusCode = 500
                 };
             }

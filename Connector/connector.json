@@ -1,0 +1,1883 @@
+{
+  "name": "Accubid Anywhere Testing",
+  "urlPart": "trimble-sales-accubid",
+  "key": "trimble-sales-accubid",
+  "description": "Accubid is a comprehensive estimating and project management software designed for electrical contractors. It helps streamline the bidding, project tracking, and cost management processes, improving accuracy and efficiency in construction projects.",
+  "connectionDefinitions": [
+    {
+      "key": "oAuth2CodeFlow",
+      "name": "Accubid OAuth2",
+      "description": "OAuth2 authentication for Accubid Anywhere APIs",
+      "attributes": [
+        {
+          "title": "Connection Environment",
+          "key": "connectionEnvironment",
+          "isSensitive": false,
+          "isRequired": true,
+          "description": "Select the Accubid environment to connect to",
+          "options": [
+            {
+              "label": "Production",
+              "value": 1
+            },
+            {
+              "label": "Test",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "type": "OAuth2CodeFlow"
+    }
+  ],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "ApiClient": {
+        "type": "object",
+        "properties": {
+          "MaxRetries": {
+            "type": "integer"
+          },
+          "TimeoutSeconds": {
+            "type": "integer"
+          }
+        }
+      },
+      "BaseUrl": {
+        "type": "string"
+      },
+      "Auth": {
+        "type": "object",
+        "properties": {
+          "ClientId": {
+            "type": "string"
+          },
+          "ClientSecret": {
+            "type": "string"
+          },
+          "TokenEndpoint": {
+            "type": "string"
+          },
+          "AuthorizationEndpoint": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "modules": [
+    {
+      "name": "Database",
+      "urlPart": "database",
+      "key": "database",
+      "description": "",
+      "version": 1,
+      "services": [
+        {
+          "name": "trimble-sales-accubid/database/1 Action Processor",
+          "type": "ActionProcessor",
+          "configSchema": {
+            "type": "object",
+            "title": "Database V1 Action Processor Configuration",
+            "description": "Configuration of the data object actions for the module."
+          }
+        },
+        {
+          "name": "trimble-sales-accubid/database/1 Cache Writer",
+          "type": "CacheWriter",
+          "configSchema": {
+            "type": "object",
+            "properties": {
+              "DatabasesConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "title": "Database V1 Cache Writer Configuration",
+            "description": "Configuration of the data object caches for the module."
+          }
+        }
+      ],
+      "dataObjects": [
+        {
+          "name": "Databases",
+          "urlPart": "databases",
+          "key": "databases",
+          "description": "Represents a database in Accubid Anywhere that the user has access to.",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Token for accessing the database. This token does not change and can be saved for future use."
+              },
+              "databaseName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of the database"
+              },
+              "companyName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of the company"
+              }
+            },
+            "required": [
+              "token",
+              "databaseName",
+              "companyName"
+            ],
+            "description": "Represents a database in Accubid Anywhere that the user has access to."
+          },
+          "keys": [
+            {
+              "urlPart": "token",
+              "propertyNames": [
+                "token"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    {
+      "name": "Estimate",
+      "urlPart": "estimate",
+      "key": "estimate",
+      "description": "",
+      "version": 1,
+      "services": [
+        {
+          "name": "trimble-sales-accubid/estimate/1 Action Processor",
+          "type": "ActionProcessor",
+          "configSchema": {
+            "type": "object",
+            "title": "Estimate V1 Action Processor Configuration",
+            "description": "Configuration of the data object actions for the module."
+          }
+        },
+        {
+          "name": "trimble-sales-accubid/estimate/1 Cache Writer",
+          "type": "CacheWriter",
+          "configSchema": {
+            "type": "object",
+            "properties": {
+              "EstimateConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "EstimatesConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "EstimatesByDueDateConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ExtensionItemDetailsFileSignalRConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "NotificationTestConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "title": "Estimate V1 Cache Writer Configuration",
+            "description": "Configuration of the data object caches for the module."
+          }
+        }
+      ],
+      "dataObjects": [
+        {
+          "name": "Estimate",
+          "urlPart": "estimate",
+          "key": "estimate",
+          "description": "Represents a detailed estimate from Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "estimateId": {
+                "type": "string",
+                "description": "Unique identifier for the estimate",
+                "minLength": 1
+              },
+              "projectId": {
+                "type": "string",
+                "description": "ID of the project this estimate belongs to",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the estimate",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the estimate"
+              },
+              "status": {
+                "type": "string",
+                "description": "Current status of the estimate",
+                "minLength": 1
+              },
+              "dueDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Due date for the estimate"
+              },
+              "createdDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the estimate was created"
+              },
+              "createdBy": {
+                "type": "string",
+                "description": "User who created the estimate",
+                "minLength": 1
+              },
+              "lastModifiedDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the estimate was last modified"
+              },
+              "lastModifiedBy": {
+                "type": "string",
+                "description": "User who last modified the estimate",
+                "minLength": 1
+              },
+              "number": {
+                "type": "string",
+                "description": "Estimate number",
+                "minLength": 1
+              },
+              "industry": {
+                "type": "string",
+                "description": "Industry type (Electrical, Mechanical, ICT)",
+                "minLength": 1
+              },
+              "laborColumn": {
+                "type": "string",
+                "description": "The labor column used in the estimate"
+              },
+              "laborFactorMethod": {
+                "type": "string",
+                "description": "The labor factor method used in the estimate"
+              },
+              "imperialMetric": {
+                "type": "string",
+                "description": "Imperial/Metric setting for the estimate"
+              },
+              "applyMarkupOnOverhead": {
+                "type": "boolean",
+                "description": "Setting to indicate if ApplyMarkupOnOverhead is used in the estimate"
+              },
+              "vendorPricingPrecedence": {
+                "type": "boolean",
+                "description": "Setting to indicate if VendorPricingPrecedence is used in the estimate"
+              },
+              "contract": {
+                "type": "string",
+                "description": "Name of the contract related to the estimate"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Estimate notes in HTML format"
+              },
+              "timeInterval": {
+                "type": "string",
+                "description": "Time interval (Days, Weeks, Months, 4weeks)"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Time interval duration"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Estimate start date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Estimate end date"
+              },
+              "isDeleted": {
+                "type": "boolean",
+                "description": "Flag to indicate if the estimate has been marked as deleted"
+              },
+              "bidSummaries": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bidSummaryID": {
+                      "type": "string",
+                      "description": "ID of the bid summary",
+                      "minLength": 1
+                    },
+                    "bidSummaryName": {
+                      "type": "string",
+                      "description": "Name of the bid summary",
+                      "minLength": 1
+                    }
+                  },
+                  "description": "List of bid summaries related to the estimate"
+                },
+                "description": "List of bid summaries related to the estimate"
+              },
+              "breakdownCategories": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "breakdownCategoryID": {
+                      "type": "string",
+                      "description": "ID of the breakdown category",
+                      "minLength": 1
+                    },
+                    "breakdownCategoryName": {
+                      "type": "string",
+                      "description": "Name of the breakdown category",
+                      "minLength": 1
+                    },
+                    "breakdownCategoryLabel": {
+                      "type": "string",
+                      "description": "Label for the breakdown category",
+                      "minLength": 1
+                    }
+                  },
+                  "description": "List of breakdown categories related to the estimate"
+                },
+                "description": "List of breakdown categories related to the estimate"
+              }
+            },
+            "description": "Represents a detailed estimate from Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "estimateId",
+              "propertyNames": [
+                "estimateId"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Estimates",
+          "urlPart": "estimates",
+          "key": "estimates",
+          "description": "Represents an estimate from the system",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "string",
+                "description": "The project ID this estimate belongs to"
+              },
+              "estimateId": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate id. This ID can be used with the estimate api to get information for the estimate."
+              },
+              "estimateName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate name"
+              },
+              "estimateNumber": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate number"
+              },
+              "status": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate status. Can be \u0022Pending\u0022, \u0022First\u0022, \u0022Second\u0022, \u0022Third\u0022, \u0022Other\u0022"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Estimate start date (can be null)"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Estimate end date (can be null)"
+              },
+              "createdDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the estimate was created"
+              },
+              "dueDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the estimate is due"
+              },
+              "createdBy": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of the person who created the estimate"
+              },
+              "contract": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of contract related to the estimate"
+              },
+              "isDeleted": {
+                "type": "boolean",
+                "description": "Flag to indicate the estimate has been deleted"
+              }
+            },
+            "required": [
+              "estimateId",
+              "estimateName",
+              "estimateNumber",
+              "status",
+              "startDate",
+              "endDate",
+              "createdDate",
+              "createdBy",
+              "contract"
+            ],
+            "description": "Represents an estimate from the system"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "estimateId"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Estimates By Due Date",
+          "urlPart": "estimates-by-due-date",
+          "key": "estimates-by-due-date",
+          "description": "Represents an estimate with due date information",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "description": "Start date of the date range"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "End date of the date range"
+              },
+              "estimateId": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate id"
+              },
+              "estimateName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate name"
+              },
+              "estimateNumber": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Estimate number"
+              },
+              "dueDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Due date of the estimate"
+              }
+            },
+            "required": [
+              "estimateId",
+              "estimateName",
+              "estimateNumber",
+              "dueDate"
+            ],
+            "description": "Represents an estimate with due date information"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "estimateId"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Extension Item Details File Signal R",
+          "urlPart": "extension-item-details-file-signal-r",
+          "key": "extension-item-details-file-signal-r",
+          "description": "Example description of the object.",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Example primary key of the object"
+              },
+              "fileUrl": {
+                "type": "string",
+                "description": "URL to download the extension item details file"
+              }
+            },
+            "description": "Example description of the object."
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "SignalR Notification Test",
+          "urlPart": "notification-test",
+          "key": "notification-test",
+          "description": "Represents a SignalR notification test response",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "connectionId": {
+                "type": "string",
+                "description": "SignalR connection ID",
+                "minLength": 1
+              },
+              "fileUrl": {
+                "type": "string",
+                "description": "URL to download the extension item details file"
+              }
+            },
+            "required": [
+              "connectionId"
+            ],
+            "title": "SignalR Notification Test",
+            "description": "Represents a SignalR notification test response",
+            "additionalProperties": false
+          },
+          "keys": [
+            {
+              "urlPart": "connectionId",
+              "propertyNames": [
+                "connectionId"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    {
+      "name": "Project",
+      "urlPart": "project",
+      "key": "project",
+      "description": "",
+      "version": 1,
+      "services": [
+        {
+          "name": "trimble-sales-accubid/project/1 Action Processor",
+          "type": "ActionProcessor",
+          "configSchema": {
+            "type": "object",
+            "title": "Project V1 Action Processor Configuration",
+            "description": "Configuration of the data object actions for the module."
+          }
+        },
+        {
+          "name": "trimble-sales-accubid/project/1 Cache Writer",
+          "type": "CacheWriter",
+          "configSchema": {
+            "type": "object",
+            "properties": {
+              "LastProjectsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ProjectConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ProjectsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "title": "Project V1 Cache Writer Configuration",
+            "description": "Configuration of the data object caches for the module."
+          }
+        }
+      ],
+      "dataObjects": [
+        {
+          "name": "Last Projects",
+          "urlPart": "last-projects",
+          "key": "last-projects",
+          "description": "Represents a project summary from Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "projectID": {
+                "type": "string",
+                "description": "Unique identifier for the project",
+                "minLength": 1
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name",
+                "minLength": 1
+              },
+              "projectNumber": {
+                "type": "string",
+                "description": "Project number",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "description": "Project type",
+                "minLength": 1
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project start date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project end date"
+              },
+              "createdDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the project was created"
+              },
+              "createdBy": {
+                "type": "string",
+                "description": "Name of person who created the project",
+                "minLength": 1
+              },
+              "managingBranchName": {
+                "type": "string",
+                "description": "Name of managing branch for the project",
+                "minLength": 1
+              }
+            },
+            "description": "Represents a project summary from Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "projectID",
+              "propertyNames": [
+                "projectID"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Project",
+          "urlPart": "project",
+          "key": "project",
+          "description": "Represents a project from Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "projectID": {
+                "type": "string",
+                "description": "Unique identifier for the project",
+                "minLength": 1
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name",
+                "minLength": 1
+              },
+              "projectNumber": {
+                "type": "string",
+                "description": "Project number",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "description": "Project type",
+                "minLength": 1
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project start date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project end date"
+              },
+              "createdDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the project was created"
+              },
+              "createdBy": {
+                "type": "string",
+                "description": "Name of person who created the project",
+                "minLength": 1
+              },
+              "managingBranchName": {
+                "type": "string",
+                "description": "Name of managing branch for the project",
+                "minLength": 1
+              },
+              "siteName": {
+                "type": "string",
+                "description": "Project site name"
+              },
+              "sitePhone": {
+                "type": "string",
+                "description": "Phone number for the project\u0027s site"
+              },
+              "siteFax": {
+                "type": "string",
+                "description": "Fax number for the project\u0027s site"
+              },
+              "siteStreet1": {
+                "type": "string",
+                "description": "Address for the project\u0027s site"
+              },
+              "siteStreet2": {
+                "type": "string",
+                "description": "Address for the project\u0027s site"
+              },
+              "siteCity": {
+                "type": "string",
+                "description": "City for the project\u0027s site"
+              },
+              "siteState": {
+                "type": "string",
+                "description": "State/Province for the project\u0027s site"
+              },
+              "siteCountry": {
+                "type": "string",
+                "description": "Country for the project\u0027s site"
+              },
+              "siteZipCode": {
+                "type": "string",
+                "description": "Zip/Postal Code for the project\u0027s site"
+              },
+              "projectPath": {
+                "type": "string",
+                "description": "Folder path of the project"
+              },
+              "vendors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "vendorName": {
+                      "type": "string",
+                      "description": "Name of the vendor",
+                      "minLength": 1
+                    },
+                    "vendorCode": {
+                      "type": "string",
+                      "description": "Code for the vendor",
+                      "minLength": 1
+                    },
+                    "supplierExchange": {
+                      "type": "integer",
+                      "description": "Supplier Exchange id for the vendor"
+                    }
+                  },
+                  "description": "List of vendors related to the project"
+                },
+                "description": "List of vendors related to the project"
+              }
+            },
+            "description": "Represents a project from Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "projectID",
+              "propertyNames": [
+                "projectID"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Projects",
+          "urlPart": "projects",
+          "key": "projects",
+          "description": "Represents a project summary from Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "string",
+                "description": "Unique identifier for the project",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the project",
+                "minLength": 1
+              },
+              "number": {
+                "type": "string",
+                "description": "Project number",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "description": "Project type",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "description": "Current status of the project",
+                "minLength": 1
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project start date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project end date"
+              },
+              "createdDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the project was created"
+              },
+              "lastModifiedDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the project was last modified"
+              },
+              "managingBranchName": {
+                "type": "string",
+                "description": "Name of managing branch for the project",
+                "minLength": 1
+              }
+            },
+            "description": "Represents a project summary from Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "projectId",
+              "propertyNames": [
+                "projectId"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    {
+      "name": "Closeout",
+      "urlPart": "closeout",
+      "key": "closeout",
+      "description": "",
+      "version": 1,
+      "services": [
+        {
+          "name": "trimble-sales-accubid/closeout/1 Action Processor",
+          "type": "ActionProcessor",
+          "configSchema": {
+            "type": "object",
+            "title": "Closeout V1 Action Processor Configuration",
+            "description": "Configuration of the data object actions for the module."
+          }
+        },
+        {
+          "name": "trimble-sales-accubid/closeout/1 Cache Writer",
+          "type": "CacheWriter",
+          "configSchema": {
+            "type": "object",
+            "properties": {
+              "FinalPriceConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "title": "Closeout V1 Cache Writer Configuration",
+            "description": "Configuration of the data object caches for the module."
+          }
+        }
+      ],
+      "dataObjects": [
+        {
+          "name": "Final Price",
+          "urlPart": "final-price",
+          "key": "final-price",
+          "description": "Represents a final price record from Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the final price record"
+              },
+              "idDescription": {
+                "type": "string"
+              },
+              "projectId": {
+                "type": "string",
+                "description": "Associated project identifier"
+              },
+              "bidSummaryId": {
+                "type": "string",
+                "description": "Associated bid summary identifier"
+              },
+              "operation": {
+                "type": "string",
+                "description": "Operation type"
+              },
+              "operationUtc": {
+                "type": "string",
+                "description": "Operation timestamp in UTC"
+              },
+              "calculatedPercentage": {
+                "type": "number",
+                "description": "Calculated percentage for the final price"
+              },
+              "calculatedAmount": {
+                "type": "number",
+                "description": "Calculated amount for the final price"
+              },
+              "adjustmentPercentage": {
+                "type": "number",
+                "description": "Adjustment percentage applied"
+              },
+              "adjustmentAmount": {
+                "type": "number",
+                "description": "Adjustment amount applied"
+              },
+              "modifiedPercentage": {
+                "type": "number",
+                "description": "Modified percentage after adjustments"
+              },
+              "modifiedAmount": {
+                "type": "number",
+                "description": "Modified amount after adjustments"
+              },
+              "percentageOfFinalPrice": {
+                "type": "number",
+                "description": "Percentage of final price"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the final price"
+              },
+              "basedOn": {
+                "type": "string",
+                "description": "Base reference for the final price"
+              },
+              "rate": {
+                "type": "number",
+                "description": "Rate applied"
+              },
+              "fieldLaborIncluded": {
+                "type": "boolean",
+                "description": "Indicates if field labor is included"
+              },
+              "shopLaborIncluded": {
+                "type": "boolean",
+                "description": "Indicates if shop labor is included"
+              },
+              "incidentalLaborIncluded": {
+                "type": "boolean",
+                "description": "Indicates if incidental labor is included"
+              },
+              "laborFactoringIncluded": {
+                "type": "boolean",
+                "description": "Indicates if labor factoring is included"
+              },
+              "indirectLaborIncluded": {
+                "type": "boolean",
+                "description": "Indicates if indirect labor is included"
+              },
+              "displayOrder": {
+                "type": "integer",
+                "description": "Display order for the record"
+              },
+              "rangeList": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "adjPercent": {
+                      "type": "number"
+                    },
+                    "overAmount": {
+                      "type": "number"
+                    },
+                    "toAmount": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "billingMethod": {
+                "type": "string",
+                "description": "Method used for billing"
+              },
+              "code": {
+                "type": "string",
+                "description": "Associated code"
+              },
+              "laborRiskRationPercent": {
+                "type": "number",
+                "description": "Labor risk ratio percentage"
+              }
+            },
+            "description": "Represents a final price record from Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    {
+      "name": "Change Order",
+      "urlPart": "changeorder",
+      "key": "changeorder",
+      "description": "",
+      "version": 1,
+      "services": [
+        {
+          "name": "trimble-sales-accubid/changeorder/1 Action Processor",
+          "type": "ActionProcessor",
+          "configSchema": {
+            "type": "object",
+            "title": "ChangeOrder V1 Action Processor Configuration",
+            "description": "Configuration of the data object actions for the module."
+          }
+        },
+        {
+          "name": "trimble-sales-accubid/changeorder/1 Cache Writer",
+          "type": "CacheWriter",
+          "configSchema": {
+            "type": "object",
+            "properties": {
+              "ContractCostDistributionConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ContractQuoteLabelsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ContractsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ContractStatusesConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "ContractSubcontractLabelsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "PCOConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "PCOsConfig": {
+                "type": "object",
+                "properties": {
+                  "UploadObject": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "title": "ChangeOrder V1 Cache Writer Configuration",
+            "description": "Configuration of the data object caches for the module."
+          }
+        }
+      ],
+      "dataObjects": [
+        {
+          "name": "Contract Cost Distribution",
+          "urlPart": "contract-cost-distribution",
+          "key": "contract-cost-distribution",
+          "description": "Represents a cost distribution for a contract in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the cost distribution"
+              },
+              "estimateID": {
+                "type": "string",
+                "description": "ID of the associated estimate"
+              },
+              "estimateName": {
+                "type": "string",
+                "description": "Name of the associated estimate"
+              },
+              "estimateNumber": {
+                "type": "string",
+                "description": "Number of the associated estimate"
+              },
+              "bidSummaryID": {
+                "type": "string",
+                "description": "ID of the associated bid summary"
+              },
+              "bidSummaryName": {
+                "type": "string",
+                "description": "Name of the associated bid summary"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the cost distribution"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the cost distribution"
+              },
+              "vendor": {
+                "type": "string",
+                "description": "Vendor associated with the cost distribution"
+              },
+              "costDistribution": {
+                "type": "string",
+                "description": "Cost distribution value"
+              },
+              "cost": {
+                "type": "number",
+                "description": "Cost value"
+              },
+              "contractId": {
+                "type": "string",
+                "description": "ID of the associated contract"
+              }
+            },
+            "description": "Represents a cost distribution for a contract in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Contract Quote Labels",
+          "urlPart": "contract-quote-labels",
+          "key": "contract-quote-labels",
+          "description": "Represents a contract quote label",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "contractId": {
+                "type": "string",
+                "description": "The associated contract ID"
+              },
+              "index": {
+                "type": "integer",
+                "description": "The index of the quote label"
+              },
+              "description": {
+                "type": "string",
+                "description": "The description of the quote label"
+              },
+              "enumVName": {
+                "type": "string",
+                "description": "The enum value name"
+              }
+            },
+            "description": "Represents a contract quote label"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "contractId",
+                "index"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Contracts",
+          "urlPart": "contracts",
+          "key": "contracts",
+          "description": "Represents a contract in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the contract"
+              },
+              "contractID": {
+                "type": "integer",
+                "description": "Contract ID number"
+              },
+              "ContractID": {
+                "type": "string",
+                "description": "Contract ID string"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the contract"
+              },
+              "number": {
+                "type": "string",
+                "description": "Contract number"
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Contract date"
+              },
+              "estimates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "contractID": {
+                      "type": "integer",
+                      "description": "Contract ID number for the estimate"
+                    },
+                    "jobID": {
+                      "type": "integer",
+                      "description": "Job ID for the estimate"
+                    },
+                    "estimateID": {
+                      "type": "string",
+                      "description": "Estimate ID"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the estimate"
+                    },
+                    "baseContractAmount": {
+                      "type": "number",
+                      "description": "Base contract amount"
+                    },
+                    "changeOrderAmount": {
+                      "type": "number",
+                      "description": "Change order amount"
+                    },
+                    "totalAmount": {
+                      "type": "number",
+                      "description": "Total contract amount"
+                    },
+                    "coLaborHours": {
+                      "type": "number",
+                      "description": "Change order labor hours"
+                    },
+                    "bcLaborHours": {
+                      "type": "number",
+                      "description": "Base contract labor hours"
+                    },
+                    "totalLaborHours": {
+                      "type": "number",
+                      "description": "Total labor hours"
+                    }
+                  },
+                  "description": "List of estimates associated with the contract"
+                },
+                "description": "List of estimates associated with the contract"
+              },
+              "projectId": {
+                "type": "string",
+                "description": "ID of the associated project"
+              }
+            },
+            "description": "Represents a contract in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Contract Statuses",
+          "urlPart": "contract-statuses",
+          "key": "contract-statuses",
+          "description": "Represents a status for a contract in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the contract status"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the contract status"
+              },
+              "IncludeInCOToDate": {
+                "type": "boolean",
+                "description": "Whether to include in CO to date"
+              },
+              "contractId": {
+                "type": "string",
+                "description": "ID of the associated contract"
+              }
+            },
+            "description": "Represents a status for a contract in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "Contract Subcontract Labels",
+          "urlPart": "contract-subcontract-labels",
+          "key": "contract-subcontract-labels",
+          "description": "Represents a subcontract label for a contract in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the subcontract label"
+              },
+              "index": {
+                "type": "integer",
+                "description": "Index of the subcontract label"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the subcontract label"
+              },
+              "enumVName": {
+                "type": "string",
+                "description": "Enum value name of the subcontract label"
+              },
+              "contractId": {
+                "type": "string",
+                "description": "ID of the associated contract"
+              }
+            },
+            "description": "Represents a subcontract label for a contract in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "P C O",
+          "urlPart": "pco",
+          "key": "pco",
+          "description": "Represents a Proposed Change Order (PCO) in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the PCO"
+              },
+              "totalRows": {
+                "type": "integer",
+                "description": "Total number of rows"
+              },
+              "jobID": {
+                "type": "integer",
+                "description": "Job ID"
+              },
+              "pcoID": {
+                "type": "string",
+                "description": "PCO ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the PCO"
+              },
+              "number": {
+                "type": "string",
+                "description": "PCO number"
+              },
+              "isDeleted": {
+                "type": "boolean",
+                "description": "Whether the PCO is deleted"
+              },
+              "bidDueDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Bid due date"
+              },
+              "dateCreated": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the PCO was created"
+              },
+              "projectStartDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project start date"
+              },
+              "status": {
+                "type": "string",
+                "description": "Status of the PCO"
+              },
+              "isFrozen": {
+                "type": "boolean",
+                "description": "Whether the PCO is frozen"
+              },
+              "dateFrozen": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the PCO was frozen"
+              },
+              "changeOrderNumber": {
+                "type": "string",
+                "description": "Change order number"
+              },
+              "changeOrderDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Change order date"
+              },
+              "sellingPrice": {
+                "type": "number",
+                "description": "Selling price"
+              },
+              "materialAmount": {
+                "type": "number",
+                "description": "Material amount"
+              },
+              "directLaborAmount": {
+                "type": "number",
+                "description": "Direct labor amount"
+              },
+              "indirectLaborAmount": {
+                "type": "number",
+                "description": "Indirect labor amount"
+              },
+              "equipmentAmount": {
+                "type": "number",
+                "description": "Equipment amount"
+              },
+              "generalExpensesAmount": {
+                "type": "number",
+                "description": "General expenses amount"
+              },
+              "subcontractsAmount": {
+                "type": "number",
+                "description": "Subcontracts amount"
+              },
+              "quotesAmount": {
+                "type": "number",
+                "description": "Quotes amount"
+              },
+              "overheadMarkupAmount": {
+                "type": "number",
+                "description": "Overhead markup amount"
+              },
+              "globalTaxAmount": {
+                "type": "number",
+                "description": "Global tax amount"
+              },
+              "totalAmount": {
+                "type": "number",
+                "description": "Total amount"
+              },
+              "overheadMarkupPct": {
+                "type": "number",
+                "description": "Overhead markup percentage"
+              },
+              "laborHours": {
+                "type": "number",
+                "description": "Labor hours"
+              },
+              "subs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "Index number"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value amount"
+                    }
+                  },
+                  "description": "Subcontract amounts by index"
+                },
+                "description": "Subcontract amounts by index"
+              },
+              "quotes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "Index number"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value amount"
+                    }
+                  },
+                  "description": "Quote amounts by index"
+                },
+                "description": "Quote amounts by index"
+              },
+              "referenceFields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "value": true,
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "description": "Dynamic reference fields"
+              }
+            },
+            "description": "Represents a Proposed Change Order (PCO) in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        },
+        {
+          "name": "P C Os",
+          "urlPart": "pc-os",
+          "key": "pc-os",
+          "description": "Represents a list of Proposed Change Orders (PCOs) in Accubid Anywhere",
+          "createEndpoint": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Unique identifier for the PCO"
+              },
+              "totalRows": {
+                "type": "integer",
+                "description": "Total number of rows"
+              },
+              "jobID": {
+                "type": "integer",
+                "description": "Job ID"
+              },
+              "pcoID": {
+                "type": "string",
+                "description": "PCO ID"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the PCO"
+              },
+              "number": {
+                "type": "string",
+                "description": "PCO number"
+              },
+              "isDeleted": {
+                "type": "boolean",
+                "description": "Whether the PCO is deleted"
+              },
+              "bidDueDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Bid due date"
+              },
+              "dateCreated": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the PCO was created"
+              },
+              "projectStartDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Project start date"
+              },
+              "status": {
+                "type": "string",
+                "description": "Status of the PCO"
+              },
+              "isFrozen": {
+                "type": "boolean",
+                "description": "Whether the PCO is frozen"
+              },
+              "dateFrozen": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date the PCO was frozen"
+              },
+              "changeOrderNumber": {
+                "type": "string",
+                "description": "Change order number"
+              },
+              "changeOrderDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Change order date"
+              },
+              "sellingPrice": {
+                "type": "number",
+                "description": "Selling price"
+              },
+              "materialAmount": {
+                "type": "number",
+                "description": "Material amount"
+              },
+              "directLaborAmount": {
+                "type": "number",
+                "description": "Direct labor amount"
+              },
+              "indirectLaborAmount": {
+                "type": "number",
+                "description": "Indirect labor amount"
+              },
+              "equipmentAmount": {
+                "type": "number",
+                "description": "Equipment amount"
+              },
+              "generalExpensesAmount": {
+                "type": "number",
+                "description": "General expenses amount"
+              },
+              "subcontractsAmount": {
+                "type": "number",
+                "description": "Subcontracts amount"
+              },
+              "quotesAmount": {
+                "type": "number",
+                "description": "Quotes amount"
+              },
+              "overheadMarkupAmount": {
+                "type": "number",
+                "description": "Overhead markup amount"
+              },
+              "globalTaxAmount": {
+                "type": "number",
+                "description": "Global tax amount"
+              },
+              "totalAmount": {
+                "type": "number",
+                "description": "Total amount"
+              },
+              "overheadMarkupPct": {
+                "type": "number",
+                "description": "Overhead markup percentage"
+              },
+              "laborHours": {
+                "type": "number",
+                "description": "Labor hours"
+              },
+              "subs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "Index number"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value amount"
+                    }
+                  },
+                  "description": "Subcontract amounts by index"
+                },
+                "description": "Subcontract amounts by index"
+              },
+              "quotes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "Index number"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value amount"
+                    }
+                  },
+                  "description": "Quote amounts by index"
+                },
+                "description": "Quote amounts by index"
+              },
+              "referenceFields": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Dynamic reference fields"
+              }
+            },
+            "description": "Represents a list of Proposed Change Orders (PCOs) in Accubid Anywhere"
+          },
+          "keys": [
+            {
+              "urlPart": "id",
+              "propertyNames": [
+                "id"
+              ],
+              "isPrimary": true
+            }
+          ],
+          "actions": []
+        }
+      ]
+    }
+  ]
+}

@@ -4,15 +4,30 @@ using Xchange.Connector.SDK.Client.ConnectionDefinitions.Attributes;
 
 namespace Connector.Connections;
 
-[ConnectionDefinition(title: "Accubid OAuth2", description: "OAuth2 authentication for Accubid Anywhere APIs")]
+[ConnectionDefinition(title: "Trimble ID OAuth2", description: "OAuth2 authentication using Trimble Identity")]
 public class OAuth2CodeFlow : OAuth2CodeFlowBase
 {
     [ConnectionProperty(
         title: "Connection Environment", 
-        description: "Select the Accubid environment to connect to", 
+        description: "Select the environment to connect to", 
         isRequired: true, 
         isSensitive: false)]
-    public ConnectionEnvironmentOAuth2CodeFlow ConnectionEnvironment { get; set; } = ConnectionEnvironmentOAuth2CodeFlow.Unknown;
+    public ConnectionEnvironmentOAuth2CodeFlow ConnectionEnvironment { get; set; } = 
+        ConnectionEnvironmentOAuth2CodeFlow.Unknown;
+
+    [ConnectionProperty(
+        title: "Client ID",
+        description: "OAuth2 client ID from Trimble Developer Console",
+        isRequired: true,
+        isSensitive: false)]
+    public new string ClientId { get; init; } = string.Empty;
+
+    [ConnectionProperty(
+        title: "Client Secret",
+        description: "OAuth2 client secret from Trimble Developer Console", 
+        isRequired: true,
+        isSensitive: true)]
+    public new string ClientSecret { get; init; } = string.Empty;
 
     public OAuth2CodeFlow()
     {
@@ -21,10 +36,10 @@ public class OAuth2CodeFlow : OAuth2CodeFlowBase
         TokenUrl = "https://id.trimble.com/oauth/token";
         RefreshUrl = "https://id.trimble.com/oauth/token";
         
-        // Required scopes for Accubid API
-        Scope = "openid accubid.api";
+        // Required scopes - you'll need to specify the correct scopes for your API
+        Scope = "openid"; // Add your specific API scopes here
         
-        // Use Basic Auth header for client authentication
+        // Configure authentication method
         ClientAuthentication = ClientAuthentication.BasicAuthHeader;
     }
 
